@@ -1,0 +1,17 @@
+SPRING FRAMEWORK
+
+What is spring framework?
+>an application framework and inversion of control container for the Java platform.
+
+What is an Application Framework?
+>in computer programming, an application framework consists of a software framework used by software developers to implement the standard structure of application software.
+
+What is Inversion of Control?
+>IoC is a principle in software engineering which transfers the control of objects or portions of a program to a container or framework. We most often use it in the context of object-oriented programming.
+
+What is Dependency Injection?
+>Dependency injection is a pattern we can use to implement IoC, where the control being inverted is setting an object's dependencies.
+>Connecting objects with other objects, or “injecting” objects into other objects, is done by an assembler rather than by the objects themselves.
+
+
+
