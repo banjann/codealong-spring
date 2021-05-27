@@ -1,8 +1,15 @@
 package com.ivan.springtutorial;
 
-public class Car {
+import org.springframework.stereotype.Component;
+
+@Component
+public class Car implements Vehicle {
 
 	public void drive() {
 		System.out.println("It's driving..");
+	}
+	
+	public String getName() {
+		return "this is a car";
 	}
 }

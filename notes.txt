@@ -11,7 +11,101 @@ What is Inversion of Control?
 
 What is Dependency Injection?
 >Dependency injection is a pattern we can use to implement IoC, where the control being inverted is setting an object's dependencies.
->Connecting objects with other objects, or “injecting” objects into other objects, is done by an assembler rather than by the objects themselves.
+>Connecting objects with other objects, or “injecting” objects into other objects, is done by an IoC container rather than by the objects themselves.
 
+ApplicationContext
+>represents the Spring IoC container and is responsible for instantiating, configuring, and assembling the aforementioned beans.
+>The container gets its instructions on what objects to instantiate, configure, and assemble by reading configuration metadata.
 
+BeanFactory
+>like ApplicationContext, it is an IoC container for Spring, only that it has less features than ApplicationContext. Hence, ApplicationContext is more generally recommended. BeanFactory can be used only when
+memore consumption is critical.
 
+What is Spring Bean?
+>In Spring, a bean is an object that the Spring container instantiates, assembles, and manages.
+>So, should we configure all the objects of our application as Spring beans? Well, as a best practice, we should not.
+>As per Spring documentation, in general, we should define beans for service layer objects, data access objects (DAOs), presentation objects, infrastructure objects such as Hibernate SessionFactories, JMS Queues, and so forth.
+
+Different ways of configuration definition in Spring:
+1. xml-based configuration, when you describe configuration in xml file ; this is already present since the beggining of Spring
+Note: you need to provide xml-based configuration metadata to the container
+2. annotation based configuration ; introduced in Spring 2.5
+Note: we will need to enable it in our Spring configuration file
+3. java-based configuration - this is when AnnotationConfigApplicationContext and Configuration annotation were introduced - you could potentially drop XML entirely -> java based config. Although this became practical only later with version 4+, because of large number of xml helper tags for aop, jdbc etc.
+
+Setter Injection
+EX:
+class DependentService {
+    private Service1 service1;
+    private Service2 service2;
+
+    public void setService1(Service1 service1) {
+        this.service1 = service1;
+    }
+
+    public void setService2(Service2 service2) {
+        this.service2 = service2;
+    }
+
+    void doSmth() {
+        service1.doSmth();
+        service2.doSmth();
+    }
+
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="service1" class="example.Service1"/>
+    <bean id="service2" class="example.Service2"/>
+
+    <bean id="dependentService" class="example.DependentService">
+        <property name="service1" ref="service1"/>
+        <property name="service2" ref="service2"/>
+    </bean>
+
+</beans>
+
+Constructor Injection
+EX:
+
+@Service
+class DependentService {
+    private final Service1 service1;
+    private final Service2 service2;
+
+    @Autowired
+    public DependentService(Service1 service1, Service2 service2) {
+        this.service1 = service1;
+        this.service2 = service2;
+    }
+
+    void doSmth() {
+        service1.doSmth();
+        service2.doSmth();
+    }
+
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="service1" class="example.Service1"/>
+    <bean id="service2" class="example.Service2"/>
+
+    <bean id="dependentService" class="example.DependentService">
+        <constructor-arg type="example.Service1" ref="service1"/>
+        <constructor-arg type="example.Service2" ref="service2"/>
+    </bean>
+
+</beans>
+
+***Realizations***
+>when changing the implementation of the dependency, you can simply state in the configuration file (e.g. ApplicationContext.xml) the new dependency instead of changing the source code.
